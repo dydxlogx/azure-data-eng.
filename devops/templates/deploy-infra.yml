@@ -1,0 +1,21 @@
+parameters:
+- name: environment
+  type: string
+
+jobs:
+- job: DeployInfra_${{ parameters.environment }}
+  pool:
+    vmImage: 'ubuntu-latest'
+  steps:
+  - checkout: self
+  - task: AzureCLI@2
+    displayName: Deploy Bicep
+    inputs:
+      azureSubscription: 'svc-connection-${{ parameters.environment }}'
+      scriptType: bash
+      scriptLocation: inlineScript
+      inlineScript: |
+        az deployment group create \
+          --resource-group rg-data-${{ parameters.environment }} \
+          --template-file infra/bicep/main.bicep \
+          --parameters environment=${{ parameters.environment }} sqlAdminPassword=$(sqlAdminPassword)

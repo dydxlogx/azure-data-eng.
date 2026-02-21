@@ -1,0 +1,26 @@
+{
+  "name": "tg_daily_oracle_ingestion",
+  "properties": {
+    "type": "ScheduleTrigger",
+    "typeProperties": {
+      "recurrence": {
+        "frequency": "Day",
+        "interval": 1,
+        "startTime": "2025-01-01T01:00:00Z",
+        "timeZone": "UTC"
+      }
+    },
+    "pipelines": [
+      {
+        "pipelineReference": {
+          "referenceName": "pl_oracle_to_raw_metadata",
+          "type": "PipelineReference"
+        },
+        "parameters": {
+          "load_type": "daily",
+          "table_filter": "*"
+        }
+      }
+    ]
+  }
+}

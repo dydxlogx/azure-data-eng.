@@ -1,0 +1,10 @@
+ADFActivityRun
+| where PipelineName == "pl_oracle_to_raw_metadata"
+| summarize failed=countif(Status != "Succeeded"), success=countif(Status == "Succeeded") by bin(TimeGenerated, 1h)
+
+DatabricksClusters
+| summarize avgCpu=avg(CPUUsage), avgMemory=avg(MemoryUsage) by ClusterName, bin(TimeGenerated, 1h)
+
+AzureDiagnostics
+| where Category == "SQLSecurityAuditEvents"
+| summarize events=count() by database_principal_name_s, bin(TimeGenerated, 1d)

@@ -1,0 +1,60 @@
+{
+  "name": "pl_oracle_to_raw_metadata",
+  "properties": {
+    "parameters": {
+      "load_type": {"type": "String", "defaultValue": "daily"},
+      "table_filter": {"type": "String", "defaultValue": "*"}
+    },
+    "activities": [
+      {
+        "name": "Lookup_Config",
+        "type": "Lookup",
+        "typeProperties": {
+          "source": {
+            "type": "AzureSqlSource",
+            "sqlReaderQuery": "SELECT * FROM meta.ingestion_config WHERE is_active = 1 AND load_type = '@{pipeline().parameters.load_type}'"
+          },
+          "dataset": {
+            "referenceName": "ds_sql_metadata",
+            "type": "DatasetReference"
+          },
+          "firstRowOnly": false
+        }
+      },
+      {
+        "name": "ForEach_Table",
+        "type": "ForEach",
+        "dependsOn": [{"activity": "Lookup_Config", "dependencyConditions": ["Succeeded"]}],
+        "typeProperties": {
+          "isSequential": false,
+          "items": "@activity('Lookup_Config').output.value",
+          "activities": [
+            {
+              "name": "Copy_Oracle_To_Raw",
+              "type": "Copy",
+              "inputs": [
+                {
+                  "referenceName": "ds_oracle_table",
+                  "type": "DatasetReference",
+                  "parameters": {
+                    "schemaName": "@item().source_schema",
+                    "tableName": "@item().source_table"
+                  }
+                }
+              ],
+              "outputs": [
+                {
+                  "referenceName": "ds_adls_parquet",
+                  "type": "DatasetReference",
+                  "parameters": {
+                    "filePath": "@concat(item().source_schema,'/',item().source_table,'/ingest_date=',formatDateTime(utcnow(),'yyyy-MM-dd'))"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
