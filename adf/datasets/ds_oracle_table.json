@@ -1,0 +1,19 @@
+{
+  "name": "ds_oracle_table",
+  "properties": {
+    "linkedServiceName": {
+      "referenceName": "ls_oracle",
+      "type": "LinkedServiceReference"
+    },
+    "parameters": {
+      "schemaName": {"type": "String"},
+      "tableName": {"type": "String"}
+    },
+    "type": "OracleTable",
+    "schema": [],
+    "typeProperties": {
+      "schema": "@{dataset().schemaName}",
+      "table": "@{dataset().tableName}"
+    }
+  }
+}

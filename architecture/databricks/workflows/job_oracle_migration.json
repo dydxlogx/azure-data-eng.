@@ -1,0 +1,24 @@
+{
+  "name": "job_oracle_migration",
+  "max_concurrent_runs": 1,
+  "tasks": [
+    {
+      "task_key": "bronze_to_silver",
+      "notebook_task": {
+        "notebook_path": "/Repos/data/architecture/databricks/notebooks/01_bronze_to_silver",
+        "base_parameters": {
+          "source_table": "bronze.orders",
+          "target_table": "silver.orders",
+          "quarantine_table": "silver.orders_quarantine",
+          "primary_keys": "order_id"
+        }
+      },
+      "new_cluster": {
+        "spark_version": "13.3.x-scala2.12",
+        "node_type_id": "Standard_DS3_v2",
+        "num_workers": 2,
+        "autotermination_minutes": 20
+      }
+    }
+  ]
+}
