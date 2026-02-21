@@ -1,0 +1,35 @@
+trigger:
+  branches:
+    include:
+      - main
+
+stages:
+- stage: Validate
+  jobs:
+  - job: LintAndValidate
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - checkout: self
+    - script: |
+        python -m pip install --upgrade pip
+        pip install pytest pyspark
+      displayName: Install dependencies
+    - script: |
+        pytest architecture/databricks/src/tests -q
+      displayName: Run unit tests
+
+- stage: Deploy_Dev
+  dependsOn: Validate
+  jobs:
+  - template: ../templates/deploy-infra.yml
+    parameters:
+      environment: dev
+
+- stage: Deploy_Prod
+  dependsOn: Deploy_Dev
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+  jobs:
+  - template: ../templates/deploy-infra.yml
+    parameters:
+      environment: prod

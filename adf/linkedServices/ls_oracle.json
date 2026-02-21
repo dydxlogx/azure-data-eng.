@@ -1,0 +1,19 @@
+{
+  "name": "ls_oracle",
+  "properties": {
+    "type": "Oracle",
+    "typeProperties": {
+      "connectionString": "Server=@{linkedService().server};Port=1521;Service Name=@{linkedService().serviceName};User Id=@{linkedService().userName};Password=@{linkedService().password};"
+    },
+    "parameters": {
+      "server": {"type": "String"},
+      "serviceName": {"type": "String"},
+      "userName": {"type": "String"},
+      "password": {"type": "SecureString"}
+    },
+    "connectVia": {
+      "referenceName": "selfHostedIntegrationRuntime",
+      "type": "IntegrationRuntimeReference"
+    }
+  }
+}

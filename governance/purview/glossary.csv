@@ -1,0 +1,4 @@
+term,definition,domain,owner
+Customer,Any legal entity buying products,Sales,Data Product Owner
+Order,Commercial transaction initiated by customer,Sales,Data Product Owner
+GrossSales,Total order amount before discounts,Finance,Finance Analytics Owner

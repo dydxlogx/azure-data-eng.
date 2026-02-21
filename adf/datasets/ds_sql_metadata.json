@@ -1,0 +1,15 @@
+{
+  "name": "ds_sql_metadata",
+  "properties": {
+    "linkedServiceName": {
+      "referenceName": "ls_azure_sql",
+      "type": "LinkedServiceReference"
+    },
+    "type": "AzureSqlTable",
+    "schema": [],
+    "typeProperties": {
+      "schema": "meta",
+      "table": "ingestion_config"
+    }
+  }
+}
