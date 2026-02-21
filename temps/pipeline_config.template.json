@@ -1,0 +1,9 @@
+{
+  "project": "{{PROJECT}}",
+  "environment": "{{ENV}}",
+  "owner": "{{OWNER}}",
+  "storage": {
+    "raw": "abfss://raw@{{PROJECT}}{{ENV}}.dfs.core.windows.net/",
+    "curated": "abfss://curated@{{PROJECT}}{{ENV}}.dfs.core.windows.net/"
+  }
+}
